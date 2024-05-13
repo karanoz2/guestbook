@@ -17,13 +17,13 @@ namespace test.book.bll.UnitTests.MessagingFeature
 
         [Fact]
         public async Task NoMessages() {
-            // Arrange.
+            // Arrange
             _dalMessages.Setup(s => s.GetMessages(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Message[0]);
 
-            // Act.
+            // Act
             var list = await _messageReader.ReadPage();
 
-            // Assert.
+            // Assert
             Assert.NotNull(list);
             Assert.Equal(0, list.Count);
         }
@@ -31,17 +31,17 @@ namespace test.book.bll.UnitTests.MessagingFeature
         [Fact]
         public async Task FewMessages()
         {
-            // Arrange.
+            // Arrange
             _dalMessages.Setup(s => s.GetMessages(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Message[2] { 
                 new Message { Id = 1, Text = "Super!", Participant = "Billi", Created = DateTime.UtcNow },
                 new Message { Id = 2, Text = "Excelent!", Participant = "Bob", Created = DateTime.UtcNow }
             });
             _dalMessages.Setup(s=>s.GetCount()).ReturnsAsync(2);
 
-            // Act.
+            // Act
             var list = await _messageReader.ReadPage();
 
-            // Assert.
+            // Assert
             Assert.NotNull(list);
             Assert.Equal(2, list.Count);
         }
@@ -52,16 +52,14 @@ namespace test.book.bll.UnitTests.MessagingFeature
         [InlineData(10, -1)]
         public async Task WrongPerPage1(int pp, int p)
         {
-            // Arrange.
+            // Arrange
             _dalMessages.Setup(s => s.GetMessages(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Message[0]);
 
-            // Act.
+            // Act
             Task result() => _messageReader.ReadPage(pp, p);
 
-            // Assert.
+            // Assert
             await Assert.ThrowsAsync<MessageValidateionException>(result);
-        }
-
-       
+        }       
     }
 }
